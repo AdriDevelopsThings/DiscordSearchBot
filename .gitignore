@@ -1,2 +1,6 @@
 # Project exclude paths
 /venv/
+.idea
+logs/
+builds/
+node_modules/
