@@ -1,11 +1,17 @@
 version: '3'
 services:
   bot:
-    build: .
-    restart: always
-    tty: yes
-    volumes:
-      - ./banlist.json:/usr/src/app/banlist.json
-    environment:
-      GOOGLE_API_TOKEN: "AIzaSyB0n4GW5e1lX4KDgVsgcMVMeU_LQee5YtU"
-      DISCORD_BOT_TOKEN: "Njc3ODYwNDA5MTQ2ODY3NzMz.XkaYuA.1y50GVjlQFHOtw7xLH2IYJO_AiQ"
+      build: .
+      restart: always
+      tty: yes
+      volumes:
+        - ./settings.json:./settings.json
+      environment:
+        GOOGLE_API_TOKEN: "AIzaSyB0n4GW5e1lX4KDgVsgcMVMeU_LQee5YtU"
+        BOT_TOKEN: "Njc3ODYwNDA5MTQ2ODY3NzMz.XkaYuA.1y50GVjlQFHOtw7xLH2IYJO_AiQ"
+        CONFIG_FILE: "./settings.json"
+        DB_HOST: "127.0.0.1"
+        DB_PORT: "3308"
+        DB_USER: "search_bot"
+        DB_PASSWORD: "sihigbher9ahae9hoareh0aehj"
+        DB_NAME: "search_bot"
