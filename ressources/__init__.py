@@ -20,8 +20,7 @@ load()
 db = declarative_base()
 engine = None
 try:
-    engine = create_engine(get_config().SQLALCHEMY_DATABASE_URI, echo=True)
-    print(get_config().SQLALCHEMY_DATABASE_URI)
+    engine = create_engine(get_config().SQLALCHEMY_DATABASE_URI)
     Session = sessionmaker(bind=engine)
 except Exception as e:
     print("ERROR!")
