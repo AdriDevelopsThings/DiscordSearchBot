@@ -1,6 +1,6 @@
 from urllib.parse import quote
-from . import client, api, get_config, get_prefix
-from .permissions import is_allowed_to_use, has_admin_permissions
+from . import client, api, get_config
+from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban
 
 already_processed_requests = []
 
@@ -30,22 +30,16 @@ async def on_message(message):
         )
 
     elif message.content.startswith(f"<@!{client.user.id}> changeprefix"):
-        if await has_admin_permissions(message.guild, message.author):
-            new_prefix = message.content.replace(f"<@!{client.user.id}> changeprefix", "")\
-                .replace("\n", "").replace("\t", "").lstrip(" ").split(" ")
-            if len(new_prefix) == 0 or new_prefix[0] == "":
-                await message.channel.send("Du muss ein neues Präfix angeben!")
-                return
-            new_prefix = new_prefix[0]
-            get_config().prefixes.update({message.guild.id: new_prefix})
-            get_config().save_to_json()
-            await message.channel.send(f"New prefix: {new_prefix}")
-        else:
-            await message.channel.send("Du hast keine Erlaubnis, das auszuführen!")
+        await change_prefix(message)
 
     elif message.content.startswith(f"<@!{client.user.id}> prefix"):
-        if await has_admin_permissions(message.guild, message.author):
-            await message.channel.send(f"Prefix: {get_prefix(None, message)}")
+        await prefix(message)
+
+    elif message.content.startswith(f"<@!{client.user.id}> deny"):
+        await ban(message)
+
+    elif message.content.startswith(f"<@!{client.user.id}> allow"):
+        await unban(message)
 
     elif message.content == f"<@!{client.user.id}> reload":
         if message.author.id == 330148908531580928 or message.author.id == 212866839083089921:
