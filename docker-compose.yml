@@ -1,11 +1,34 @@
 version: '3'
 services:
+  database:
+    image: mysql:8.0.3
+    expose:
+      - 3006
+    environment:
+      MYSQL_RANDOM_ROOT_PASSWORD: "yes"
+      MYSQL_USER: "search_bot"
+      MYSQL_PASSWORD: "sihigbher9ahae9hoareh0aehj"
+      MYSQL_DATABASE: "search_bot"
+    volumes:
+      - "dsb_db:/var/lib/mysql"
   bot:
     build: .
     restart: always
     tty: yes
     volumes:
-      - ./banlist.json:/usr/src/app/banlist.json
+      - ./settings.json:/app/settings.json
+    depends_on:
+      - database
     environment:
       GOOGLE_API_TOKEN: "AIzaSyB0n4GW5e1lX4KDgVsgcMVMeU_LQee5YtU"
-      DISCORD_BOT_TOKEN: "Njc3ODYwNDA5MTQ2ODY3NzMz.XkaYuA.1y50GVjlQFHOtw7xLH2IYJO_AiQ"
+      BOT_TOKEN: "Njc3ODYwNDA5MTQ2ODY3NzMz.XkaYuA.1y50GVjlQFHOtw7xLH2IYJO_AiQ"
+      GOOGLE_CX_ALL: "009036592350705430035:6ldu8w4sb8x"
+      GOOGLE_CX_STACKOVERFLOW: "009036592350705430035:zbtf2kvp09s"
+      CONFIG_FILE: "./settings.json"
+      DB_HOST: "database"
+      DB_PORT: "3306"
+      DB_USER: "search_bot"
+      DB_PASSWORD: "sihigbher9ahae9hoareh0aehj"
+      DB_NAME: "search_bot"
+volumes:
+  dsb_db:

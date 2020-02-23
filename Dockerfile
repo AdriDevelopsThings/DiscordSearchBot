@@ -1,10 +1,11 @@
-FROM python:3
-WORKDIR /usr/src/app
+FROM python:3.8
+WORKDIR /app
+RUN pip install --no-cache-dir --upgrade pip
+RUN pip install --no-cache-dir pipenv
 
-COPY ./requirements.txt ./requirements.txt
-RUN pip install --no-cache-dir pip --upgrade
-RUN pip install --no-cache-dir -r requirements.txt
+COPY ./Pipfile* ./
+RUN pipenv install
 
 COPY . .
 
-CMD ["python", "main.py"]
+CMD ["pipenv", "run", "python", "run.py"]
