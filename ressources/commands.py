@@ -8,7 +8,9 @@ async def deny(ctx):
         await ctx.message.channel.send("Du hast keine Erlaubnis, das auszuführen!")
         return
     if len(ctx.message.mentions) != 1:
-        await ctx.message.channel.send("Kein User angegeben oder das Kommando ist falsch aufgebaut!")
+        await ctx.message.channel.send(
+            "Kein User angegeben oder das Kommando ist falsch aufgebaut!"
+        )
         return
     user = ctx.message.mentions[0].id
     await ban(user, ctx.message.guild)
@@ -21,7 +23,9 @@ async def allow(ctx):
         await ctx.message.channel.send("Du hast keine Erlaubnis, das auszuführen!")
         return
     if len(ctx.message.mentions) != 1:
-        await ctx.message.channel.send("Kein User angegeben oder das Kommando ist falsch aufgebaut!")
+        await ctx.message.channel.send(
+            "Kein User angegeben oder das Kommando ist falsch aufgebaut!"
+        )
         return
     user = ctx.message.mentions[0].id
 
