@@ -13,6 +13,8 @@ class Config:
     role_settings: dict = {}
     BOT_TOKEN: str = ""
     GOOGLE_API_TOKEN: str = ""
+    GOOGLE_CX_ALL: str = ""
+    GOOGLE_CX_STACKOVERFLOW: str = ""
     config_file: str = ""
     json_config: dict = {}
     db_host: str = ""
@@ -30,6 +32,14 @@ class Config:
         self.GOOGLE_API_TOKEN = environ.get("GOOGLE_API_TOKEN")
         if not self.GOOGLE_API_TOKEN:
             print("GOOGLE_API_TOKEN not correctly provided! Exiting!")
+            exit(1)
+        self.GOOGLE_CX_ALL = environ.get("GOOGLE_CX_ALL")
+        if not self.GOOGLE_CX_ALL:
+            print("GOOGLE_CX_ALL not correctly provided! Exiting!")
+            exit(1)
+        self.GOOGLE_CX_STACKOVERFLOW = environ.get("GOOGLE_CX_STACKOVERFLOW")
+        if not self.GOOGLE_CX_STACKOVERFLOW:
+            print("GOOGLE_CX_STACKOVERFLOW not correctly provided! Exiting!")
             exit(1)
         self.config_file = environ.get("CONFIG_FILE")
         if not self.GOOGLE_API_TOKEN:

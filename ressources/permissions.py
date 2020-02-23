@@ -5,7 +5,7 @@ from .database.user import get_user, add_user, remove_user
 async def has_admin_permissions(guild, member):
     roles: list = get_config().role_settings.get(str(guild.id))
     if roles:
-        return any(guild.get_role(int(f)) in member.roles for f in roles)
+        return any(guild.get_role(int(f)) in member.roles for f in roles) or str(member.id) in roles
     return False
 
 
