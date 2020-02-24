@@ -7,6 +7,13 @@ class GoogleCxNotFound(BaseException):
     pass
 
 
+def strip_search_query(message_content, cx_type):
+    search_query = message_content.lstrip(f"{cx_type}:")
+    if search_query[0] == " ":
+        search_query = search_query[1:]
+    return search_query
+
+
 class Api:
     def __init__(self):
         self.service = build(
@@ -33,7 +40,7 @@ class Api:
         return embed
 
     def search(self, message, cx_type="google"):
-        search_string = message.content.lstrip(f"{cx_type}: ")
+        search_string = strip_search_query(message.content, cx_type)
         try:
             res = (
                 self.service.cse()

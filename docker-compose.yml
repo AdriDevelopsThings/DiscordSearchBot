@@ -21,7 +21,7 @@ services:
       - database
     environment:
       GOOGLE_API_TOKEN: "AIzaSyB0n4GW5e1lX4KDgVsgcMVMeU_LQee5YtU"
-      BOT_TOKEN: "Njc3ODYwNDA5MTQ2ODY3NzMz.XkaYuA.1y50GVjlQFHOtw7xLH2IYJO_AiQ"
+      BOT_TOKEN: "NTA0MzAxMTU0NjEyNTQzNDg5.XlQvpw.xm-cIwPg76cl88QgpwoAAVm8gP8"
       GOOGLE_CX_ALL: "009036592350705430035:6ldu8w4sb8x"
       GOOGLE_CX_STACKOVERFLOW: "009036592350705430035:zbtf2kvp09s"
       CONFIG_FILE: "./settings.json"
