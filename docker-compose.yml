@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_RANDOM_ROOT_PASSWORD: "yes"
       MYSQL_USER: "search_bot"
-      MYSQL_PASSWORD: "sihigbher9ahae9hoareh0aehj"
+      MYSQL_PASSWORD: "janfsknasjfnkjoiasfhjiokjsanf"
       MYSQL_DATABASE: "search_bot"
     volumes:
       - "dsb_db:/var/lib/mysql"
@@ -20,15 +20,15 @@ services:
     depends_on:
       - database
     environment:
-      GOOGLE_API_TOKEN: "AIzaSyB0n4GW5e1lX4KDgVsgcMVMeU_LQee5YtU"
-      BOT_TOKEN: "NTA0MzAxMTU0NjEyNTQzNDg5.XlQvpw.xm-cIwPg76cl88QgpwoAAVm8gP8"
+      GOOGLE_API_TOKEN: ""
+      BOT_TOKEN: ""
       GOOGLE_CX_ALL: "009036592350705430035:6ldu8w4sb8x"
       GOOGLE_CX_STACKOVERFLOW: "009036592350705430035:zbtf2kvp09s"
       CONFIG_FILE: "./settings.json"
       DB_HOST: "database"
       DB_PORT: "3306"
       DB_USER: "search_bot"
-      DB_PASSWORD: "sihigbher9ahae9hoareh0aehj"
+      DB_PASSWORD: "janfsknasjfnkjoiasfhjiokjsanf"
       DB_NAME: "search_bot"
 volumes:
   dsb_db:
