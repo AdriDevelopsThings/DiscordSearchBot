@@ -22,6 +22,7 @@ class Config:
     db_user: str = ""
     db_password: str = ""
     db_name: str = ""
+    ctx_types = ["google", "stackoverflow"]
     SQLALCHEMY_DATABASE_URI: str = ""
 
     def __init__(self):

@@ -17,8 +17,7 @@ async def google_message(message, name):
 
 
 async def get_google_command(message):
-    types = ["google", "stackoverflow"]
-    for type in types:
+    for type in get_config().ctx_types:
         if message.content.startswith(f"{type}: "):
             await google_message(message, type)
 
