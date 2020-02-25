@@ -6,14 +6,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import traceback
 
+from ressources.permissions import get_prefix
+
 settings = {}
 
-
-def get_prefix(_, message):
-    config_object = get_config()
-    if str(message.guild.id) in config_object.prefixes:
-        return config_object.prefixes[str(message.guild.id)]
-    return "§"
 
 
 load()

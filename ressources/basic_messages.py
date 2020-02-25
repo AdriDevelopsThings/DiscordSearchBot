@@ -1,9 +1,8 @@
 from urllib.parse import quote
 
-from discord import Embed
-
 from . import client, api, get_config
-from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban
+from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban, join_server
+from .errors import parse_error
 
 already_processed_requests = []
 
@@ -27,38 +26,41 @@ async def on_message(message):
     if message.author.id == client.user.id:
         return
     await get_google_command(message)
+    try:
+        if message.content.startswith("lmgtfy: "):
+            if not await is_allowed_to_use(message):
+                await message.add_reaction("❌")
+                return
 
-    if message.content.startswith("lmgtfy: "):
-        if not await is_allowed_to_use(message):
-            await message.add_reaction("❌")
-            return
-
-        await message.channel.send(
-            "https://lmgtfy.com/?q="
-            + quote(message.content.lstrip("lmgtfy: ")).replace("%20", "+")
-        )
-
-    elif message.content.startswith(f"<@!{client.user.id}> changeprefix"):
-        await change_prefix(message)
-
-    elif message.content.startswith(f"<@!{client.user.id}> prefix"):
-        await prefix(message)
-
-    elif message.content.startswith(f"<@!{client.user.id}> deny"):
-        await ban(message)
-
-    elif message.content.startswith(f"<@!{client.user.id}> allow"):
-        await unban(message)
-
-    elif message.content == f"<@!{client.user.id}> reload":
-        if (
-            message.author.id == 330148908531580928
-            or message.author.id == 212866839083089921
-        ):
-            get_config().load_config_from_file()
             await message.channel.send(
-                f"{message.author.mention} Reload abgeschlossen."
+                "https://lmgtfy.com/?q="
+                + quote(message.content.lstrip("lmgtfy: ")).replace("%20", "+")
             )
+
+        elif message.content.startswith(f"<@!{client.user.id}> changeprefix"):
+            await change_prefix(message)
+
+        elif message.content.startswith(f"<@!{client.user.id}> prefix"):
+            await prefix(message)
+
+        elif message.content.startswith(f"<@!{client.user.id}> deny"):
+            await ban(message)
+
+        elif message.content.startswith(f"<@!{client.user.id}> allow"):
+            await unban(message)
+        elif message.content.startswith(f"<@!{client.user.id}> init"):
+            await join_server(message.guild, message.channel)
+        elif message.content == f"<@!{client.user.id}> reload":
+            if (
+                message.author.id == 330148908531580928
+                or message.author.id == 212866839083089921
+            ):
+                get_config().load_config_from_file()
+                await message.channel.send(
+                    f"{message.author.mention} Reload abgeschlossen."
+                )
+    except Exception as e:
+        await parse_error(e, message.guild)
 
     await client.process_commands(message)
 

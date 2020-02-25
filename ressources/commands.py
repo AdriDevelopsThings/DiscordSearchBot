@@ -1,5 +1,5 @@
-from ressources import get_config, get_prefix
-from .permissions import ban, unban, prefix, change_prefix
+from ressources import get_config
+from .permissions import ban, unban, prefix, change_prefix, get_prefix
 from discord import Embed
 from . import client
 
