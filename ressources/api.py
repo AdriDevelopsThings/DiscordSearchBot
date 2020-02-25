@@ -33,7 +33,7 @@ class Api:
         for i in resource:
             embed.add_field(
                 name=i["htmlTitle"].replace("</b>", "").replace("<b>", ""),
-                value=i["formattedUrl"],
+                value=i["link"],
                 inline=False,
             )
         embed.set_footer(text=f"Angefragt von {str(message.author)}")
