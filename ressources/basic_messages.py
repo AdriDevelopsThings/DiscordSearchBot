@@ -7,6 +7,7 @@ from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban
 
 already_processed_requests = []
 
+
 async def google_message(message, name):
     if not await is_allowed_to_use(message):
         await message.add_reaction("❌")

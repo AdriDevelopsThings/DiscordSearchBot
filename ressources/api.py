@@ -21,10 +21,13 @@ class Api:
         )
 
     def get_not_found_message(self, user, search_string):
-        embed = Embed(title="Google's Ergebnisse für:", description=search_string, color=0xff0000)
+        embed = Embed(
+            title="Google's Ergebnisse für:", description=search_string, color=0xFF0000
+        )
         embed.add_field(name="Fehler", value="Es wurde kein Ergebniss gefunden.")
         embed.set_footer(text=f"Angefragt von {str(user)}")
         return embed
+
     def get_cx_by_name(self, name):
         if name == "google":
             return get_config().GOOGLE_CX_ALL
