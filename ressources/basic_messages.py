@@ -1,19 +1,18 @@
 from urllib.parse import quote
+
+from discord import Embed
+
 from . import client, api, get_config
 from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban
 
 already_processed_requests = []
-
 
 async def google_message(message, name):
     if not await is_allowed_to_use(message):
         await message.add_reaction("❌")
         return
     response = api.search(message, name)
-    if response is None:
-        await message.channel.send("0 Ergebnisse gefunden")
-    else:
-        await message.channel.send(embed=response)
+    await message.channel.send(embed=response)
 
 
 async def get_google_command(message):
@@ -80,7 +79,4 @@ async def on_reaction_add(reaction, user):
     ]:
         response = api.search(reaction.message)
         already_processed_requests.append(reaction.message.id)
-        if response is None:
-            await reaction.message.channel.send("0 Ergebnisse gefunden")
-        else:
-            await reaction.message.channel.send(embed=response)
+        await reaction.message.channel.send(embed=response)
