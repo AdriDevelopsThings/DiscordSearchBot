@@ -13,23 +13,23 @@ class User(db):
         self.guild_id = guild_id
 
 
-def get_user(user_id: str, guild_id: str):
+def get_user(user, guild):
     session = Session()
-    user_list = session.query(User).filter(and_(User.user_id==user_id, User.guild_id==guild_id)).all()
+    user_list = session.query(User).filter(and_(User.user_id == user.id, User.guild_id == guild.id)).all()
     session.close()
     return user_list
 
 
-def add_user(user_id: str, guild_id: str):
-    if len(get_user(user_id, guild_id)) == 0:
+def add_user(user, guild):
+    if len(get_user(user, guild)) == 0:
         session = Session()
-        session.add(User(user_id, guild_id))
+        session.add(User(user.id, guild.id))
         session.commit()
         session.close()
 
 
-def remove_user(user_id: str, guild_id: str):
-    user_list = get_user(user_id, guild_id)
+def remove_user(user, guild):
+    user_list = get_user(user, guild)
     if len(user_list) > 0:
         session = Session()
         session.delete(user_list[0])

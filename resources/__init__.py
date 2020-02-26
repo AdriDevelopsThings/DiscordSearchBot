@@ -1,20 +1,15 @@
-from ressources.api import Api
-from ressources.config import load, get_config
+from discord import Guild
+
+from resources.api import Api
+from resources.config import load, get_config
 from discord.ext import commands as dc_commands
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import traceback
 
+
 settings = {}
-
-
-def get_prefix(_, message):
-    config_object = get_config()
-    if str(message.guild.id) in config_object.prefixes:
-        return config_object.prefixes[str(message.guild.id)]
-    return "§"
-
 
 load()
 db = declarative_base()
@@ -27,10 +22,21 @@ except Exception as e:
     traceback.print_exc()
     print("Exiting!")
     exit(1)
+
+
+from resources.database.server import get_server
+
+
+async def get_prefix(_, messageorguild) -> str:
+    guild = messageorguild if isinstance(messageorguild, Guild) else messageorguild.guild
+    return get_server(guild).prefix
 client = dc_commands.Bot(command_prefix=get_prefix, help_command=None)
 
 api = Api()
 
-from ressources import basic_messages, commands, main, permissions
-from ressources.database import user
+from resources import basic_messages, commands, main
+from resources.core import permissions, configure, configure_roles
+from resources.core.errors import errors_event
+from resources.database import user, role, server
+
 db.metadata.create_all(engine)

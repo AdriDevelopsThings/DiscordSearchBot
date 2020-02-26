@@ -7,11 +7,26 @@ class GoogleCxNotFound(BaseException):
     pass
 
 
+def strip_search_query(message_content, cx_type):
+    search_query = message_content.lstrip(f"{cx_type}:")
+    if search_query[0] == " ":
+        search_query = search_query[1:]
+    return search_query
+
+
 class Api:
     def __init__(self):
         self.service = build(
             "customsearch", "v1", developerKey=get_config().GOOGLE_API_TOKEN
         )
+
+    def get_not_found_message(self, user, search_string):
+        embed = Embed(
+            title="Google's Ergebnisse für:", description=search_string, color=0xFF0000
+        )
+        embed.add_field(name="Fehler", value="Es wurde kein Ergebniss gefunden.")
+        embed.set_footer(text=f"Angefragt von {str(user)}")
+        return embed
 
     def get_cx_by_name(self, name):
         if name == "google":
@@ -26,14 +41,14 @@ class Api:
         for i in resource:
             embed.add_field(
                 name=i["htmlTitle"].replace("</b>", "").replace("<b>", ""),
-                value=i["formattedUrl"],
+                value=i["link"],
                 inline=False,
             )
         embed.set_footer(text=f"Angefragt von {str(message.author)}")
         return embed
 
     def search(self, message, cx_type="google"):
-        search_string = message.content.lstrip(f"{cx_type}: ")
+        search_string = strip_search_query(message.content, cx_type)
         try:
             res = (
                 self.service.cse()
@@ -42,4 +57,4 @@ class Api:
             )
             return self.parse_search_to_embed(res, message, search_string)
         except KeyError:
-            return None
+            return self.get_not_found_message(message.author, search_string)
