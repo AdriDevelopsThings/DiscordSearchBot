@@ -1,11 +1,13 @@
-from sqlalchemy import Column, Text, and_, Integer, BigInteger
+from typing import List
+
+from sqlalchemy import Column, Text, and_, Integer
 from .. import Session, db
 
 
 class Role(db):
     __tablename__ = "admin_roles"
-    admin_role_id = Column(Integer, primary_key=True)
-    role_id = Column(Text, nullable=False)
+    id = Column(Integer, primary_key=True)
+    admin_role_id = Column(Text, nullable=False)
     guild_id = Column(Text, nullable=False)
 
     def __init__(self, guild_id: str, admin_role_id: str):
@@ -13,36 +15,26 @@ class Role(db):
         self.guild_id = guild_id
 
 
-def get_roles(guild_id: str, s=None):
+def get_roles(guild, s=None) -> List[Role]:
     session: Session = Session() if s is None else s
-    servers = session.query(Role).filter(Role.guild_id == guild_id).all()
+    roles = session.query(Role).filter(Role.guild_id == guild.id).all()
     if s is None:
         session.close()
-    return servers
+    return roles
 
 
-def add_role(guild_id: str, admin_role_id: str, s=None):
+def add_role(guild, admin_role_id: str, s=None):
     session: Session = Session() if s is None else s
-    role = Role(guild_id, admin_role_id)
-    session.add(role)
+    session.add(Role(guild.id, admin_role_id))
     session.commit()
     if s is None:
         session.close()
 
 
-def remove_role(guild_id: str, s=None):
+def remove_role(guild, admin_role_id: str, s=None):
     session: Session = Session() if s is None else s
-    session.remove(get_roles(guild_id, session))
-    session.commit()
-    if s is None:
-        session.close()
-
-
-def update_role(guild_id: str, admin_role_id: str, update_content, s=None):
-    session: Session = Session() if s is None else s
-    session.query(Role).filter(
-        and_(Role.guild_id == guild_id, Role.admin_role_id == admin_role_id)
-    ).update(update_content)
+    role = session.query(Role).filter(and_(Role.admin_role_id == admin_role_id, Role.guild_id == guild.id)).first()
+    session.delete(role)
     session.commit()
     if s is None:
         session.close()

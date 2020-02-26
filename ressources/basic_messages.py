@@ -1,13 +1,16 @@
 from urllib.parse import quote
+from .database.server import get_server
 
 from . import client, api, get_config
-from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban, join_server
-from .errors import parse_error
+import traceback
+from ressources.errors import parse_error
+from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban
 
-already_processed_requests = []
+already_processed_request_id = []
 
 
 async def google_message(message, name):
+    already_processed_request_id.append(message.id)
     if not await is_allowed_to_use(message):
         await message.add_reaction("❌")
         return
@@ -25,8 +28,8 @@ async def get_google_command(message):
 async def on_message(message):
     if message.author.id == client.user.id:
         return
-    await get_google_command(message)
     try:
+        await get_google_command(message)
         if message.content.startswith("lmgtfy: "):
             if not await is_allowed_to_use(message):
                 await message.add_reaction("❌")
@@ -48,19 +51,9 @@ async def on_message(message):
 
         elif message.content.startswith(f"<@!{client.user.id}> allow"):
             await unban(message)
-        elif message.content.startswith(f"<@!{client.user.id}> init"):
-            await join_server(message.guild, message.channel)
-        elif message.content == f"<@!{client.user.id}> reload":
-            if (
-                message.author.id == 330148908531580928
-                or message.author.id == 212866839083089921
-            ):
-                get_config().load_config_from_file()
-                await message.channel.send(
-                    f"{message.author.mention} Reload abgeschlossen."
-                )
     except Exception as e:
         await parse_error(e, message.guild)
+        traceback.print_exc()
 
     await client.process_commands(message)
 
@@ -73,13 +66,11 @@ async def on_reaction_add(reaction, user):
         await reaction.message.add_reaction("❌")
         return
 
-    if reaction.count != 1 or reaction.message.id in already_processed_requests:
+    if reaction.count != 1 or reaction.message.id in already_processed_request_id:
         return
 
-    if str(reaction) in [
-        "<:google:331075369501196290>",
-        "<:google:677939519160451093>",
-    ]:
+    google_reaction = get_server(reaction.message.guild).google_reaction
+    if str(reaction) == google_reaction:
         response = api.search(reaction.message)
-        already_processed_requests.append(reaction.message.id)
+        already_processed_request_id.append(reaction.message.id)
         await reaction.message.channel.send(embed=response)

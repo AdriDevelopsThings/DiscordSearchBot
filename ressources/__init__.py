@@ -6,11 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import traceback
 
-from ressources.permissions import get_prefix
 
 settings = {}
-
-
 
 load()
 db = declarative_base()
@@ -23,10 +20,18 @@ except Exception as e:
     traceback.print_exc()
     print("Exiting!")
     exit(1)
-client = dc_commands.Bot(command_prefix=get_prefix, help_command=None)
+
+
+from ressources.database.server import get_server
+
+
+async def get_prefix(_, message):
+    return get_server(message.guild)
+client = dc_commands.Bot(command_prefix=get_prefix)
 
 api = Api()
 
 from ressources import basic_messages, commands, main, permissions
-from ressources.database import user
+from ressources.database import user, role, server
+
 db.metadata.create_all(engine)

@@ -36,10 +36,10 @@ async def help(ctx):
 
     commands = [
         {"name": f"{get_prefix(None, ctx.message)}help", "value": "Hilfe anzeigen"},
-        {"name": f"{get_prefix(None, ctx.message)}prefix", "value": "Prefix anzeigen"},
+        {"name": f"{get_prefix(None, ctx.message)}prefix", "value": "Präfix anzeigen"},
         {"name": f"{get_prefix(None, ctx.message)}change_prefix <prefix>", "value": "Prefix ändern"},
-        {"name": f"{get_prefix(None, ctx.message)}allow <@User>", "value": "Nutzer für Google Anfragen sperren"},
-        {"name": f"{get_prefix(None, ctx.message)}deny <@User>", "value": "Nutzer für Google Anfragen entsperren"},
+        {"name": f"{get_prefix(None, ctx.message)}deny <@User>", "value": "Nutzer für Google Anfragen sperren"},
+        {"name": f"{get_prefix(None, ctx.message)}allow <@User>", "value": "Nutzer für Google Anfragen entsperren"},
     ]
 
     for command in commands:
@@ -49,7 +49,7 @@ async def help(ctx):
 
     for cx_type in get_config().ctx_types:
         embed.add_field(
-            name=f"{cx_type}: <search_query>", value=f"Auf {cx_type} googlen", inline=False
+            name=f"{cx_type}: <search_query>", value=f"Auf {cx_type} suchen", inline=False
         )
 
     await ctx.send(embed=embed)
