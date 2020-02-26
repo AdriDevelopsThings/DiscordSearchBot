@@ -41,6 +41,7 @@ def initiliaze_server(guild, s=None):
     session.commit()
     if s is None:
         session.close()
+    print(f"{guild} has been initialiazed")
     return server
 
 
@@ -60,8 +61,8 @@ def update_prefix(guild, prefix: str):
     session.close()
 
 
-def update_google_reaction(guild, google_reaction: str):
+def update_google_reaction(guild, emoji):
     session = Session()
-    get_server(guild, session).google_reaction = google_reaction
+    get_server(guild, session).google_reaction = str(emoji.id)
     session.commit()
     session.close()

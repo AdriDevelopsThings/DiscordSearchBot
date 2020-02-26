@@ -20,6 +20,7 @@ class Config:
     db_password: str = ""
     db_name: str = ""
     ctx_types = ["google", "stackoverflow"]
+    message_reacting_expire = 5 # in days
     SQLALCHEMY_DATABASE_URI: str = ""
 
     def __init__(self):

@@ -23,17 +23,17 @@ def get_roles(guild, s=None) -> List[Role]:
     return roles
 
 
-def add_role(guild, admin_role_id: str, s=None):
+def add_role(guild, admin_role, s=None):
     session: Session = Session() if s is None else s
-    session.add(Role(guild.id, admin_role_id))
+    session.add(Role(guild.id, admin_role.id))
     session.commit()
     if s is None:
         session.close()
 
 
-def remove_role(guild, admin_role_id: str, s=None):
+def remove_role(guild, admin_role, s=None):
     session: Session = Session() if s is None else s
-    role = session.query(Role).filter(and_(Role.admin_role_id == admin_role_id, Role.guild_id == guild.id)).first()
+    role = session.query(Role).filter(and_(Role.admin_role_id == admin_role.id, Role.guild_id == guild.id)).first()
     session.delete(role)
     session.commit()
     if s is None:

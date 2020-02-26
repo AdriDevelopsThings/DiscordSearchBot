@@ -3,8 +3,10 @@ from .database.server import get_server
 
 from . import client, api, get_config
 import traceback
-from ressources.errors import parse_error
-from .permissions import is_allowed_to_use, prefix, change_prefix, ban, unban
+from ressources.core.errors.errors import parse_error
+from ressources.core.permissions import is_allowed_to_use
+from ressources.core.configure import msg_prefix, change_prefix
+from datetime import datetime
 
 already_processed_request_id = []
 
@@ -24,6 +26,14 @@ async def get_google_command(message):
             await google_message(message, type)
 
 
+def check_message_validity(message) -> bool:
+    created_at = message.created_at
+    now = datetime.now()
+    microseconds = now.microsecond - created_at.microseconds
+    days = microseconds * 1000 * 1000 * 60 * 60 * 24
+    return days < get_config().message_reacting_expire
+
+
 def get_mention():
     return f"<@!{client.user.id}>"
 
@@ -35,31 +45,18 @@ async def on_message(message):
     try:
         await get_google_command(message)
         if message.content.startswith("lmgtfy: "):
-            if not await is_allowed_to_use(message):
-                await message.add_reaction("❌")
-                return
 
             await message.channel.send(
                 "https://lmgtfy.com/?q="
                 + quote(message.content.lstrip("lmgtfy: ")).replace("%20", "+")
             )
 
-        elif message.content.startswith(f"{get_mention()} changeprefix"):
-            await change_prefix(message)
-
         elif message.content.startswith(f"{get_mention()} prefix"):
-            await prefix(message)
-
-        elif message.content.startswith(f"{get_mention()} deny"):
-            await ban(message)
-
-        elif message.content.startswith(f"{get_mention()} allow"):
-            await unban(message)
+            await msg_prefix(message)
 
     except Exception as e:
-        await parse_error(e, message.channel)
-        traceback.print_exc()
-
+        if await parse_error(e, message.channel):
+            traceback.print_exc()
     await client.process_commands(message)
 
 
@@ -71,11 +68,16 @@ async def on_reaction_add(reaction, user):
         await reaction.message.add_reaction("❌")
         return
 
-    if reaction.count != 1 or reaction.message.id in already_processed_request_id:
+    if (
+        reaction.count > 3
+        or reaction.message.id in already_processed_request_id
+        or not check_message_validity(reaction.message)
+    ):
         return
 
     google_reaction = get_server(reaction.message.guild).google_reaction
-    if str(reaction) == google_reaction:
+    emoji = client.get_emoji(int(google_reaction))
+    if reaction.emoji.id == emoji.id:
         response = api.search(reaction.message)
         already_processed_request_id.append(reaction.message.id)
         await reaction.message.channel.send(embed=response)
