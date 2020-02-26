@@ -1,4 +1,4 @@
-from ressources import client
+from resources import client
 from .errors import parse_error
 import traceback
 

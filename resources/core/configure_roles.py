@@ -1,5 +1,5 @@
-from ressources.core.permissions import has_admin_permissions
-from ressources.database.role import add_role, remove_role, get_roles
+from resources.core.permissions import has_admin_permissions
+from resources.database.role import add_role, remove_role, get_roles
 
 
 def check_if_role_exists(guild, discord_role):

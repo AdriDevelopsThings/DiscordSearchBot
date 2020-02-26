@@ -1,7 +1,7 @@
 from discord import Member
 
-from ressources.core.permissions import has_admin_permissions
-from ressources.database.user import add_user, remove_user
+from resources.core.permissions import has_admin_permissions
+from resources.database.user import add_user, remove_user
 
 
 async def ban(message, member: Member):

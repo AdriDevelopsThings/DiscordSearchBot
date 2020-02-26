@@ -1,8 +1,8 @@
 from discord import Emoji
 
-from ressources.core.permissions import has_admin_permissions
-from ressources import client, get_prefix
-from ressources.database.server import get_server, update_prefix, update_google_reaction
+from resources.core.permissions import has_admin_permissions
+from resources import client, get_prefix
+from resources.database.server import get_server, update_prefix, update_google_reaction
 
 
 async def msg_prefix(message):

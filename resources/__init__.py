@@ -1,7 +1,7 @@
 from discord import Guild
 
-from ressources.api import Api
-from ressources.config import load, get_config
+from resources.api import Api
+from resources.config import load, get_config
 from discord.ext import commands as dc_commands
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
@@ -24,7 +24,7 @@ except Exception as e:
     exit(1)
 
 
-from ressources.database.server import get_server
+from resources.database.server import get_server
 
 
 async def get_prefix(_, messageorguild) -> str:
@@ -34,9 +34,9 @@ client = dc_commands.Bot(command_prefix=get_prefix, help_command=None)
 
 api = Api()
 
-from ressources import basic_messages, commands, main
-from ressources.core import permissions, configure, configure_roles
-from ressources.core.errors import errors_event
-from ressources.database import user, role, server
+from resources import basic_messages, commands, main
+from resources.core import permissions, configure, configure_roles
+from resources.core.errors import errors_event
+from resources.database import user, role, server
 
 db.metadata.create_all(engine)

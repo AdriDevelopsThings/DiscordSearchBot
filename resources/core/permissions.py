@@ -1,5 +1,5 @@
-from ressources.database.role import get_roles
-from ressources.database.user import get_user, add_user, remove_user
+from resources.database.role import get_roles
+from resources.database.user import get_user, add_user, remove_user
 
 
 async def has_admin_permissions(guild, member):

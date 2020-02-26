@@ -3,9 +3,9 @@ from .database.server import get_server
 
 from . import client, api, get_config
 import traceback
-from ressources.core.errors.errors import parse_error
-from ressources.core.permissions import is_allowed_to_use
-from ressources.core.configure import msg_prefix, change_prefix
+from resources.core.errors.errors import parse_error
+from resources.core.permissions import is_allowed_to_use
+from resources.core.configure import msg_prefix, change_prefix
 from datetime import datetime
 
 already_processed_request_id = []

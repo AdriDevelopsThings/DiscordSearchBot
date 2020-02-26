@@ -1,10 +1,10 @@
-from ressources import get_config
-from ressources.core.configure import msg_prefix, change_prefix as sys_change_prefix, update_google_reactions_wrapper
-from ressources.core.configure_roles import add_admin_role, remove_admin_role
-from ressources.core.configure_permissions import ban, unban
+from resources import get_config
+from resources.core.configure import msg_prefix, change_prefix as sys_change_prefix, update_google_reactions_wrapper
+from resources.core.configure_roles import add_admin_role, remove_admin_role
+from resources.core.configure_permissions import ban, unban
 from discord import Embed, Role, Member, Emoji
 
-from ressources.core.permissions import has_admin_permissions
+from resources.core.permissions import has_admin_permissions
 from . import client, get_prefix
 
 
