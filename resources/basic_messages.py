@@ -76,7 +76,7 @@ async def on_reaction_add(reaction, user):
 
     google_reaction = get_server(reaction.message.guild).google_reaction
     emoji = client.get_emoji(int(google_reaction))
-    if reaction.emoji.id == emoji.id:
+    if emoji and reaction.emoji.id == emoji.id:
         response = api.search(reaction.message)
         already_processed_request_id.append(reaction.message.id)
         await reaction.message.channel.send(embed=response)
