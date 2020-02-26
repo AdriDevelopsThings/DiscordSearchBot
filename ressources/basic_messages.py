@@ -24,6 +24,10 @@ async def get_google_command(message):
             await google_message(message, type)
 
 
+def get_mention():
+    return f"<@!{client.user.id}>"
+
+
 @client.event
 async def on_message(message):
     if message.author.id == client.user.id:
@@ -40,19 +44,20 @@ async def on_message(message):
                 + quote(message.content.lstrip("lmgtfy: ")).replace("%20", "+")
             )
 
-        elif message.content.startswith(f"<@!{client.user.id}> changeprefix"):
+        elif message.content.startswith(f"{get_mention()} changeprefix"):
             await change_prefix(message)
 
-        elif message.content.startswith(f"<@!{client.user.id}> prefix"):
+        elif message.content.startswith(f"{get_mention()} prefix"):
             await prefix(message)
 
-        elif message.content.startswith(f"<@!{client.user.id}> deny"):
+        elif message.content.startswith(f"{get_mention()} deny"):
             await ban(message)
 
-        elif message.content.startswith(f"<@!{client.user.id}> allow"):
+        elif message.content.startswith(f"{get_mention()} allow"):
             await unban(message)
+
     except Exception as e:
-        await parse_error(e, message.guild)
+        await parse_error(e, message.channel)
         traceback.print_exc()
 
     await client.process_commands(message)

@@ -25,9 +25,9 @@ except Exception as e:
 from ressources.database.server import get_server
 
 
-async def get_prefix(_, message):
-    return get_server(message.guild)
-client = dc_commands.Bot(command_prefix=get_prefix)
+async def get_prefix(_, guild):
+    return get_server(guild).prefix
+client = dc_commands.Bot(command_prefix=get_prefix, help_command=None)
 
 api = Api()
 

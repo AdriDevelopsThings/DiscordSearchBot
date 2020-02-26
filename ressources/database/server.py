@@ -12,7 +12,7 @@ class Server(db):
     __tablename__ = "servers"
     server_id = Column(Integer, nullable=False, primary_key=True)
     guild_id = Column(Text, nullable=False)
-    prefix = Column(String, nullable=False, default="§")
+    prefix = Column(String(10), nullable=False, default="§")
     google_reaction = Column(Text, nullable=True)
 
     def __init__(self, guild_id, google_reaction="", prefix="§"):
@@ -22,22 +22,25 @@ class Server(db):
 
 
 def get_server(guild, s=None):
+    server = None
     try:
-        session: Session = Session() if s is None else s
+        session: Session = Session(expire_on_commit=False) if s is None else s
         server = session.query(Server).filter(Server.guild_id == guild.id).one()
+    except NoResultFound:
+        server = initiliaze_server(guild, session)
+    finally:
         if s is None:
             session.close()
         return server
-    except NoResultFound:
-        return initiliaze_server(guild)
 
 
-def initiliaze_server(guild):
-    session: Session = Session()
+def initiliaze_server(guild, s=None):
+    session: Session = Session() if s is None else s
     server = Server(guild.id)
     session.add(server)
     session.commit()
-    session.close()
+    if s is None:
+        session.close()
     return server
 
 
@@ -50,6 +53,7 @@ def leave_server(guild, s=None):
 
 
 def update_prefix(guild, prefix: str):
+    print(prefix)
     session = Session()
     get_server(guild, session).prefix = prefix
     session.commit()

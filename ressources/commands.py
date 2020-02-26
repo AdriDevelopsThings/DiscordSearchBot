@@ -1,5 +1,5 @@
 from ressources import get_config
-from .permissions import ban, unban, prefix, change_prefix, get_prefix
+from .permissions import ban, unban, prefix, change_prefix as sys_change_prefix, get_prefix
 from discord import Embed
 from . import client
 
@@ -21,7 +21,7 @@ async def prefix(ctx):
 
 @client.command()
 async def change_prefix(ctx):
-    await change_prefix(ctx.message)
+    await sys_change_prefix(ctx.message)
 
 
 @client.command()
@@ -35,11 +35,11 @@ async def help(ctx):
     embed.set_footer(text="OpenSource project")
 
     commands = [
-        {"name": f"{get_prefix(None, ctx.message)}help", "value": "Hilfe anzeigen"},
-        {"name": f"{get_prefix(None, ctx.message)}prefix", "value": "Präfix anzeigen"},
-        {"name": f"{get_prefix(None, ctx.message)}change_prefix <prefix>", "value": "Prefix ändern"},
-        {"name": f"{get_prefix(None, ctx.message)}deny <@User>", "value": "Nutzer für Google Anfragen sperren"},
-        {"name": f"{get_prefix(None, ctx.message)}allow <@User>", "value": "Nutzer für Google Anfragen entsperren"},
+        {"name": f"{await get_prefix(None, ctx.message)}help", "value": "Hilfe anzeigen"},
+        {"name": f"{await get_prefix(None, ctx.message)}prefix", "value": "Präfix anzeigen"},
+        {"name": f"{await get_prefix(None, ctx.message)}change_prefix <prefix>", "value": "Prefix ändern"},
+        {"name": f"{await get_prefix(None, ctx.message)}deny <@User>", "value": "Nutzer für Google Anfragen sperren"},
+        {"name": f"{await get_prefix(None, ctx.message)}allow <@User>", "value": "Nutzer für Google Anfragen entsperren"},
     ]
 
     for command in commands:

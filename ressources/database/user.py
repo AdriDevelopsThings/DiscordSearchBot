@@ -20,16 +20,16 @@ def get_user(user, guild):
     return user_list
 
 
-def add_user(user_id, guild):
-    if len(get_user(user_id, guild.id)) == 0:
+def add_user(user, guild):
+    if len(get_user(user, guild)) == 0:
         session = Session()
-        session.add(User(user_id, guild.id))
+        session.add(User(user.id, guild.id))
         session.commit()
         session.close()
 
 
 def remove_user(user, guild):
-    user_list = get_user(user.id, guild.id)
+    user_list = get_user(user, guild)
     if len(user_list) > 0:
         session = Session()
         session.delete(user_list[0])
