@@ -29,8 +29,7 @@ async def get_google_command(message):
 def check_message_validity(message) -> bool:
     created_at = message.created_at
     now = datetime.now()
-    microseconds = now.microsecond - created_at.microseconds
-    days = microseconds * 1000 * 1000 * 60 * 60 * 24
+    days = (now - created_at).days
     return days < get_config().message_reacting_expire
 
 
