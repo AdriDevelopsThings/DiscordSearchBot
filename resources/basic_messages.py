@@ -16,7 +16,7 @@ async def google_message(message, name):
     if not await is_allowed_to_use(message):
         await message.add_reaction("❌")
         return
-    response = api.search(message, name)
+    response = api.search(message, search_type="command", cx_type=name)
     await message.channel.send(embed=response)
 
 
@@ -76,7 +76,7 @@ async def on_reaction_add(reaction, user):
 
     google_reaction = get_server(reaction.message.guild).google_reaction
     emoji = client.get_emoji(int(google_reaction))
-    if reaction.emoji.id == emoji.id:
-        response = api.search(reaction.message)
+    if emoji and reaction.emoji.id == emoji.id:
+        response = api.search(reaction.message, search_type="reaction", reaction_user=user)
         already_processed_request_id.append(reaction.message.id)
         await reaction.message.channel.send(embed=response)

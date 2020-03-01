@@ -4,11 +4,10 @@ from resources.database.user import get_user, add_user, remove_user
 
 async def has_admin_permissions(guild, member):
     roles = get_roles(guild)
-    admin_permission = any(map(lambda permission: permission == ("administrator", True), member.guild_permissions))
+    if any(map(lambda permission: permission == ("administrator", True), member.guild_permissions)):
+        return True
     if roles:
         return any([any(map(lambda member_role: str(role.admin_role_id) == str(member_role.id), member.roles)) for role in roles])
-    elif admin_permission:
-        return True
     return False
 
 
