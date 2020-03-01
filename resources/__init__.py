@@ -9,7 +9,6 @@ from sqlalchemy.orm import sessionmaker
 import traceback
 
 
-settings = {}
 
 load()
 db = declarative_base()

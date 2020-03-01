@@ -2,6 +2,8 @@ from resources import get_config
 from resources.core.configure import msg_prefix, change_prefix as sys_change_prefix, update_google_reactions_wrapper
 from resources.core.configure_roles import add_admin_role, remove_admin_role
 from resources.core.configure_permissions import ban, unban
+from resources.core.commands.info import info as info_command
+from resources.core.evironment import get_version_name
 from discord import Embed, Role, Member, Emoji
 
 from resources.core.permissions import has_admin_permissions
@@ -39,6 +41,9 @@ async def add_role(ctx, role: Role):
 async def remove_role(ctx, role: Role):
     await remove_admin_role(ctx.message, role)
 
+@client.command()
+async def info(ctx):
+    await info_command(ctx)
 
 @client.command()
 async def help(ctx):
@@ -48,7 +53,7 @@ async def help(ctx):
         name="AdriBloober#9372 & TNT2k#7587",
         icon_url="https://pbs.twimg.com/profile_images/843734935022256129/-2pD4h7u_400x400.jpg",
     )
-    embed.set_footer(text="OpenSource project")
+    embed.set_footer(text=f"DiscordSearchBot {get_version_name(get_config())}")
 
     commands = [
         {"name": f"{await get_prefix(None, ctx.message)}help", "value": "Hilfe anzeigen"},
