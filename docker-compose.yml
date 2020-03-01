@@ -30,5 +30,7 @@ services:
       DB_USER: "search_bot"
       DB_PASSWORD: "janfsknasjfnkjoiasfhjiokjsanf"
       DB_NAME: "search_bot"
+      VERSION_ENVIRONMENT: "v0.1"
+      ENVIRONMENT: "Development-lc"
 volumes:
   dsb_db:

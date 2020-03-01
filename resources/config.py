@@ -1,5 +1,6 @@
 from os import environ
 from typing import Optional
+from resources.core.evironment import Environment, Version
 
 config_object: Optional["Config"] = None
 
@@ -20,6 +21,9 @@ class Config:
     db_password: str = ""
     db_name: str = ""
     ctx_types = ["google", "stackoverflow"]
+    version = Version()
+    environment = Environment()
+    github_link = "https://github.com/AdriBloober/DiscordSearchBot"
     message_reacting_expire = 5 # in days
     SQLALCHEMY_DATABASE_URI: str = ""
 
