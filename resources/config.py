@@ -25,6 +25,7 @@ class Config:
     environment = Environment()
     github_link = "https://github.com/AdriBloober/DiscordSearchBot"
     message_reacting_expire = 5 # in days
+    authors = "AdriBloober#9372 & TNT2k#7587"
     SQLALCHEMY_DATABASE_URI: str = ""
 
     def __init__(self):

@@ -40,4 +40,3 @@ class Environment(EnvironmentVariable):
 
 def get_version_name(config):
     return f"{config.version.call()} {config.environment.call()}"
-
