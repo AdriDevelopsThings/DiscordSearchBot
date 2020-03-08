@@ -79,7 +79,7 @@ async def help(ctx):
 
     for cx_type in get_config().ctx_types:
         embed.add_field(
-            name=f"{cx_type}: <search_query>", value=f"Auf {cx_type} suchen", inline=False
+            name=f"{await get_prefix(None, ctx.message)}{cx_type} <search_query>", value=f"Auf {cx_type} suchen", inline=False
         )
 
     await ctx.send(embed=embed)

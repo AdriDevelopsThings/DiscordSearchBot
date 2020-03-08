@@ -6,6 +6,7 @@ import traceback
 from resources.core.errors.errors import parse_error
 from resources.core.permissions import is_allowed_to_use
 from resources.core.configure import msg_prefix, change_prefix
+from resources import get_prefix
 from datetime import datetime
 
 already_processed_request_id = []
@@ -16,13 +17,13 @@ async def google_message(message, name):
     if not await is_allowed_to_use(message):
         await message.add_reaction("❌")
         return
-    response = api.search(message, search_type="command", cx_type=name)
+    response = api.search(message, search_type="command", cx_type=name, prefix=await get_prefix(None, message))
     await message.channel.send(embed=response)
 
 
 async def get_google_command(message):
     for type in get_config().ctx_types:
-        if message.content.startswith(f"{type}: "):
+        if message.content.startswith(f"{await get_prefix(None, message)}{type} "):
             await google_message(message, type)
 
 

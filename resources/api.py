@@ -7,8 +7,8 @@ class GoogleCxNotFound(BaseException):
     pass
 
 
-def strip_search_query(message_content, cx_type):
-    search_query = message_content.lstrip(f"{cx_type}:")
+def strip_search_query(message_content, cx_type, prefix):
+    search_query = message_content.lstrip(f"{prefix}{cx_type}")
     if search_query[0] == " ":
         search_query = search_query[1:]
     return search_query
@@ -53,10 +53,10 @@ class Api:
         return embed
 
     def search(
-        self, message, search_type="command", cx_type="google", reaction_user=None
+        self, message, search_type="command", cx_type="google", reaction_user=None, prefix="§"
     ):
         if search_type == "command":
-            search_string = strip_search_query(message.content, cx_type)
+            search_string = strip_search_query(message.content, cx_type, prefix)
         else:
             search_string = message.content
 
