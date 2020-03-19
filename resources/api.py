@@ -1,4 +1,6 @@
+import requests
 from googleapiclient.discovery import build
+from urllib.parse import quote
 from discord import Embed
 from .config import get_config
 
@@ -19,6 +21,10 @@ class Api:
         self.service = build(
             "customsearch", "v1", developerKey=get_config().GOOGLE_API_TOKEN
         )
+
+    def duckduckgo_search(self, q):
+        response = requests.get(f"https://api.duckduckgo.com/?q={quote(q)}&format=json&pretty=1").json()
+
 
     def get_not_found_message(self, user, search_string):
         embed = Embed(
@@ -59,6 +65,9 @@ class Api:
             search_string = strip_search_query(message.content, cx_type, prefix)
         else:
             search_string = message.content
+
+        if cx_type == "duckduckgo" or cx_type == "ddg":
+            self.duckduckgo_search(search_string)
 
         try:
             res = (
