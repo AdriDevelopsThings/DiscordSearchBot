@@ -4,21 +4,23 @@ from resources.core.logger import get_logger
 from . import client, api, get_config
 import traceback
 from resources.core.errors.errors import parse_error
-from resources.core.permissions import is_allowed_to_use
+from resources.core.permissions import is_allowed_to_use, has_admin_permissions
 from resources.core.configure import msg_prefix, change_prefix
 from resources import get_prefix
 from datetime import datetime
+from resources.core.submited_tasks import SubmitedTask, BanMessageTemplate, add_task, get_task_by_message
 
 already_processed_request_id = []
 
 
 async def google_message(message, name):
     already_processed_request_id.append(message.id)
-    if not await is_allowed_to_use(message):
+    if not await is_allowed_to_use(message.author, message.guild):
         await message.add_reaction("❌")
         return
     response = api.search(message, search_type="command", cx_type=name, prefix=await get_prefix(None, message))
-    await message.channel.send(embed=response)
+    msg = await message.channel.send(embed=response)
+    add_task(SubmitedTask(msg, message.author, "command"))
 
 
 async def get_google_command(message):
@@ -57,7 +59,12 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     if user.id == client.user.id:
         return
-    if not await is_allowed_to_use(reaction.message):
+    if str(reaction) == "❌" and await has_admin_permissions(reaction.message.guild, user):
+        task = get_task_by_message(reaction.message)
+        if not task is None:
+            await reaction.remove(user)
+            await task.kill(BanMessageTemplate(user, reaction.message.guild, reaction.message.channel))
+    if not await is_allowed_to_use(user, reaction.message.guild):
         await reaction.message.add_reaction("❌")
         return
 
@@ -70,10 +77,13 @@ async def on_reaction_add(reaction, user):
 
     google_reaction = get_server(reaction.message.guild).google_reaction
     emoji = client.get_emoji(int(google_reaction))
+    if type(reaction.emoji) == str:
+        return
     if emoji and reaction.emoji.id == emoji.id:
         response = api.search(reaction.message, search_type="reaction", reaction_user=user)
         already_processed_request_id.append(reaction.message.id)
-        await reaction.message.channel.send(embed=response)
+        message = await reaction.message.channel.send(embed=response)
+        add_task(SubmitedTask(message, user, "reaction"))
 
 
 @client.event
