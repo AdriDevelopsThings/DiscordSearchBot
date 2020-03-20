@@ -14,8 +14,8 @@ async def has_admin_permissions(guild, member):
     return False
 
 
-async def is_allowed_to_use(message):
-    if len(get_user(message.author, message.guild)) > 0:
+async def is_allowed_to_use(user, guild):
+    if len(get_user(user, guild)) > 0:
         return False
     return True
 
