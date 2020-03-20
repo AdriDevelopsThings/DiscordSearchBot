@@ -8,6 +8,7 @@ from discord import Embed, Role, Member, Emoji
 
 from resources.core.permissions import has_admin_permissions
 from . import client, get_prefix
+from .core.commands.lmgtfy import lmgtfy_api
 
 
 @client.command()
@@ -29,21 +30,31 @@ async def prefix(ctx):
 async def change_prefix(ctx, new_prefix: str):
     await sys_change_prefix(ctx.message, new_prefix)
 
+
 @client.command()
 async def change_google_reaction(ctx, emoji: Emoji):
     await update_google_reactions_wrapper(ctx.message, emoji)
+
 
 @client.command()
 async def add_role(ctx, role: Role):
     await add_admin_role(ctx.message, role)
 
+
 @client.command()
 async def remove_role(ctx, role: Role):
     await remove_admin_role(ctx.message, role)
 
+
 @client.command()
 async def info(ctx):
     await info_command(ctx)
+
+
+@client.command()
+async def lmgtfy(ctx, q: str):
+    await lmgtfy_api(ctx, q)
+
 
 @client.command()
 async def help(ctx):
@@ -65,7 +76,8 @@ async def help(ctx):
          "value": "Nutzer für Google Anfragen entsperren"},
         {"name": f"{await get_prefix(None, ctx.message)}add_role @Role", "value": "Eine Admin Rolle hinzufügen"},
         {"name": f"{await get_prefix(None, ctx.message)}remove_role @Role", "value": "Eine Admin Rolle entfernen"},
-        {"name": f"{await get_prefix(None, ctx.message)}change_google_reaction :emoji:", "value": "Das Google Reaction Emoji ändern"},
+        {"name": f"{await get_prefix(None, ctx.message)}change_google_reaction :emoji:",
+         "value": "Das Google Reaction Emoji ändern"},
         {"name": f"{await get_prefix(None, ctx.message)}change_prefix PREFIX", "value": "Prefix ändern"},
     ]
 
@@ -79,7 +91,8 @@ async def help(ctx):
 
     for cx_type in get_config().ctx_types:
         embed.add_field(
-            name=f"{await get_prefix(None, ctx.message)}{cx_type} <search_query>", value=f"Auf {cx_type} suchen", inline=False
+            name=f"{await get_prefix(None, ctx.message)}{cx_type} <search_query>", value=f"Auf {cx_type} suchen",
+            inline=False
         )
 
     await ctx.send(embed=embed)
