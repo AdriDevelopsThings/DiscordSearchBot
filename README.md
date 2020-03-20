@@ -1,6 +1,8 @@
 # DiscordSearchBot
 OpenSource DiscordBot
 
+Get the bot on your server: https://discordapp.com/api/oauth2/authorize?client_id=677860409146867733&permissions=88128&scope=bot
+
 **Please fork for contribution**
 
 ## Install

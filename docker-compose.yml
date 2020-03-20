@@ -32,5 +32,7 @@ services:
       DB_NAME: "search_bot"
       VERSION_ENVIRONMENT: "v0.1"
       ENVIRONMENT: "Development-lc"
+      LOG_GUILD: "681516355920723982"
+      LOG_CHANNEL: "690657543122452510"
 volumes:
   dsb_db:
