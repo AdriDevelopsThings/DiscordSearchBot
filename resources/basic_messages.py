@@ -44,14 +44,7 @@ async def on_message(message):
         return
     try:
         await get_google_command(message)
-        if message.content.startswith("lmgtfy: "):
-
-            await message.channel.send(
-                "https://lmgtfy.com/?q="
-                + quote(message.content.lstrip("lmgtfy: ")).replace("%20", "+")
-            )
-
-        elif message.content.startswith(f"{get_mention()} prefix"):
+        if message.content.startswith(f"{get_mention()} prefix"):
             await msg_prefix(message)
 
     except Exception as e:
