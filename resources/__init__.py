@@ -34,7 +34,7 @@ client = dc_commands.Bot(command_prefix=get_prefix, help_command=None)
 api = Api()
 
 from resources import basic_messages, commands, main
-from resources.core import permissions, configure, configure_roles
+from resources.core import permissions, configure, configure_roles, bot_tasks
 from resources.core.errors import errors_event
 from resources.database import user, role, server
 

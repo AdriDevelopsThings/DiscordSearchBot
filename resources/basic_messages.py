@@ -1,5 +1,5 @@
-from urllib.parse import quote
 from .database.server import get_server
+from resources.core.logger import get_logger
 
 from . import client, api, get_config
 import traceback
@@ -62,9 +62,9 @@ async def on_reaction_add(reaction, user):
         return
 
     if (
-        reaction.count > 3
-        or reaction.message.id in already_processed_request_id
-        or not check_message_validity(reaction.message)
+            reaction.count > 3
+            or reaction.message.id in already_processed_request_id
+            or not check_message_validity(reaction.message)
     ):
         return
 
@@ -74,3 +74,9 @@ async def on_reaction_add(reaction, user):
         response = api.search(reaction.message, search_type="reaction", reaction_user=user)
         already_processed_request_id.append(reaction.message.id)
         await reaction.message.channel.send(embed=response)
+
+
+@client.event
+async def on_guild_join(guild):
+    logger = get_logger()
+    await logger.log(f"Juhu! Der Server '{guild.name}' nutzt nun den DiscordSearchBot!")

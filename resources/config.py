@@ -27,6 +27,8 @@ class Config:
     message_reacting_expire = 5 # in days
     authors = "AdriBloober#9372 & TNT2k#7587"
     SQLALCHEMY_DATABASE_URI: str = ""
+    LOG_GUILD = None
+    LOG_CHANNEL = None
 
     def __init__(self):
         self.BOT_TOKEN = environ.get("BOT_TOKEN")
@@ -45,6 +47,8 @@ class Config:
         if not self.GOOGLE_CX_STACKOVERFLOW:
             print("GOOGLE_CX_STACKOVERFLOW not correctly provided! Exiting!")
             exit(1)
+        self.LOG_GUILD = environ.get("LOG_GUILD")
+        self.LOG_CHANNEL = environ.get("LOG_CHANNEL")
 
         # database
         self.db_host = environ.get("DB_HOST")
