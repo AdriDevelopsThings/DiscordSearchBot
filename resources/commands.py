@@ -4,6 +4,7 @@ from resources.core.configure_roles import add_admin_role, remove_admin_role
 from resources.core.configure_permissions import ban, unban
 from resources.core.commands.info import info as info_command
 from resources.core.evironment import get_version_name
+from resources.core.commands.admin_commands import show_guilds as show_guilds_command
 from discord import Embed, Role, Member, Emoji
 
 from resources.core.permissions import has_admin_permissions
@@ -54,6 +55,11 @@ async def info(ctx):
 @client.command()
 async def lmgtfy(ctx, q: str):
     await lmgtfy_api(ctx, q)
+
+
+@client.command()
+async def show_guilds(ctx):
+    await show_guilds_command(ctx)
 
 
 @client.command()

@@ -10,12 +10,13 @@ class Logger:
         self.channel = channel
 
     async def log(self, message):
+        print("LOG: " + message)
         if self.guild is not None:
             await self.channel.send(message)
 
 
 def get_logger() -> Logger:
-    if get_config().LOG_GUILD == None:
+    if get_config().LOG_GUILD is None:
         print("Logger does not exists")
         return Logger(None, None)
     guild: Guild = client.get_guild(int(get_config().LOG_GUILD))
