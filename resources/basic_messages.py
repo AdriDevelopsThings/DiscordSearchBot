@@ -4,10 +4,11 @@ from resources.core.logger import get_logger
 from . import client, api, get_config
 import traceback
 from resources.core.errors.errors import parse_error
-from resources.core.permissions import is_allowed_to_use
+from resources.core.permissions import is_allowed_to_use, is_admin
 from resources.core.configure import msg_prefix, change_prefix
 from resources import get_prefix
 from datetime import datetime
+from resources.core.submited_tasks import SubmitedTask, BanMessageTemplate, add_task, get_task_by_message
 
 already_processed_request_id = []
 
@@ -57,6 +58,11 @@ async def on_message(message):
 async def on_reaction_add(reaction, user):
     if user.id == client.user.id:
         return
+    if str(reaction) == "❌" and is_admin(user):
+        task = get_task_by_message(reaction.message)
+        if not task is None:
+            await reaction.remove(user)
+            await task.kill(BanMessageTemplate(user, reaction.message.guild, reaction.message.channel))
     if not await is_allowed_to_use(reaction.message):
         await reaction.message.add_reaction("❌")
         return
@@ -70,10 +76,13 @@ async def on_reaction_add(reaction, user):
 
     google_reaction = get_server(reaction.message.guild).google_reaction
     emoji = client.get_emoji(int(google_reaction))
+    if type(reaction.emoji) == str:
+        return
     if emoji and reaction.emoji.id == emoji.id:
         response = api.search(reaction.message, search_type="reaction", reaction_user=user)
         already_processed_request_id.append(reaction.message.id)
-        await reaction.message.channel.send(embed=response)
+        message = await reaction.message.channel.send(embed=response)
+        add_task(SubmitedTask(message, user, "reaction"))
 
 
 @client.event
