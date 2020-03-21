@@ -54,7 +54,6 @@ def leave_server(guild, s=None):
 
 
 def update_prefix(guild, prefix: str):
-    print(prefix)
     session = Session()
     get_server(guild, session).prefix = prefix
     session.commit()
