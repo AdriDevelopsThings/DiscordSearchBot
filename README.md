@@ -42,6 +42,13 @@ Please set following mysql environment variables:
 Google CX is a customized search. You can create this keys here: https://cse.google.com/cse/all (sometimes you can get an error 500).
 In this console you can configure the search_query (say google on what websites google search. for example: *.stackoverflow.com).
 
+### Other environment variables
+LOG_GUILD = The guild id of your log server
+
+LOG_CHANNEL = The id of the log channel (The channel must be on the LOG_GUILD)
+
+You can set the LOG_GUILD and LOG_CHANNEL to null or dont set this environments to disable the log feature
+
 ## Contribution
 
 If you would like to contribute to our open source project, use this checklist step by step:

@@ -1,11 +1,11 @@
 from resources import get_config
 from resources.core.configure import msg_prefix, change_prefix as sys_change_prefix, update_google_reactions_wrapper
 from resources.core.configure_roles import add_admin_role, remove_admin_role
-from resources.core.configure_permissions import ban, unban
+from resources.core.configure_permissions import ban, unban, global_ban, global_unban
 from resources.core.commands.info import info as info_command
 from resources.core.evironment import get_version_name
 from resources.core.commands.admin_commands import show_guilds as show_guilds_command
-from discord import Embed, Role, Member, Emoji
+from discord import Embed, Role, Member, Emoji, User
 
 from resources.core.permissions import has_admin_permissions
 from . import client, get_prefix
@@ -20,6 +20,16 @@ async def deny(ctx, member: Member):
 @client.command()
 async def allow(ctx, member: Member):
     await unban(ctx.message, member)
+
+
+@client.command()
+async def global_deny(ctx, user: User):
+    await global_ban(ctx.message, user)
+
+
+@client.command()
+async def global_allow(ctx, user: User):
+    await global_unban(ctx.message, user)
 
 
 @client.command()
