@@ -1,3 +1,5 @@
+from discord import Forbidden
+
 from .database.server import get_server
 from resources.core.logger import get_logger
 
@@ -8,7 +10,8 @@ from resources.core.permissions import is_allowed_to_use, has_admin_permissions
 from resources.core.configure import msg_prefix, change_prefix
 from resources import get_prefix
 from datetime import datetime
-from resources.core.submited_tasks import SubmitedTask, BanMessageTemplate, add_task, get_task_by_message, remove_task
+from resources.core.submited_tasks import SubmitedTask, BanMessageTemplate, add_task, get_task_by_message, remove_task, \
+    get_task_by_orginal_message
 
 already_processed_request_id = []
 
@@ -20,7 +23,8 @@ async def google_message(message, name):
         return
     response = api.search(message, search_type="command", cx_type=name, prefix=await get_prefix(None, message))
     msg = await message.channel.send(embed=response)
-    add_task(SubmitedTask(msg, message.author, "command"))
+    await msg.add_reaction(b'\xf0\x9f\x97\x91\xef\xb8\x8f'.decode())
+    add_task(SubmitedTask(msg, message.author, "command", orginal_message=message))
 
 
 async def get_google_command(message):
@@ -67,8 +71,16 @@ async def on_reaction_add(reaction, user):
     if reaction.emoji.encode() == b'\xf0\x9f\x97\x91\xef\xb8\x8f':
         task = get_task_by_message(reaction.message)
         if not task is None and task.author_id == user.id:
-            await reaction.message.delete()
-            remove_task(task)
+            if not task.orginal_message is None:
+                try:
+                    await task.orginal_message.delete()
+                except Forbidden:
+                    await reaction.message.channel.send("Liebe Admins, ich habe ja schon wenig Rechte, nur bitte "
+                                                        "bitte bitte gebt mir Rechte, um Nachrichten zu löschen. "
+                                                        ":cry: Ich wäre euch sehr dankbar!")
+                finally:
+                    await reaction.message.delete()
+                    remove_task(task)
         else:
             await reaction.remove(user)
 
@@ -91,6 +103,7 @@ async def on_reaction_add(reaction, user):
         response = api.search(reaction.message, search_type="reaction", reaction_user=user)
         already_processed_request_id.append(reaction.message.id)
         message = await reaction.message.channel.send(embed=response)
+        await message.add_reaction(b'\xf0\x9f\x97\x91\xef\xb8\x8f'.decode())
         add_task(SubmitedTask(message, user, "reaction"))
 
 
@@ -98,3 +111,10 @@ async def on_reaction_add(reaction, user):
 async def on_guild_join(guild):
     logger = get_logger()
     await logger.log(f"Juhu! Der Server '{guild.name}' nutzt nun den DiscordSearchBot!")
+
+@client.event
+async def on_message_delete(message):
+    task = get_task_by_orginal_message(message)
+    if not task is None:
+        await task.message.delete()
+        remove_task(task)

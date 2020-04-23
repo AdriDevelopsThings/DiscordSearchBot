@@ -88,7 +88,11 @@ class Api:
                 .execute()["items"][:4]
             )
             return self.parse_search_to_embed(
-                res, message, search_string, reaction_user=reaction_user, search_type=search_type
+                res,
+                message,
+                search_string,
+                reaction_user=reaction_user,
+                search_type=search_type,
             )
         except KeyError:
             if search_type == "reaction":

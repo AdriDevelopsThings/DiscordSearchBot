@@ -14,10 +14,11 @@ class BanMessageTemplate:
 
 
 class SubmitedTask:
-    def __init__(self, message: Message, author, type):
+    def __init__(self, message: Message, author, type, orginal_message=None):
         self.message = message
         self.author_id = author.id
         self.type = type
+        self.orginal_message = orginal_message
 
     async def kill(self, ban_msg_template: BanMessageTemplate):
         await ban(ban_msg_template, client.get_user(self.author_id))
@@ -40,4 +41,9 @@ def remove_task(task: SubmitedTask):
 def get_task_by_message(message):
     for task in tasks:
         if task.message.id == message.id:
+            return task
+
+def get_task_by_orginal_message(message):
+    for task in tasks:
+        if task.orginal_message.id == message.id:
             return task
