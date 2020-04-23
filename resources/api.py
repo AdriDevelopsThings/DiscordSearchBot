@@ -40,6 +40,8 @@ class Api:
             return get_config().GOOGLE_CX_ALL
         elif name == "stackoverflow":
             return get_config().GOOGLE_CX_STACKOVERFLOW
+        elif name == "wikipedia":
+            return get_config().GOOGLE_CX_WIKIPEDIA
         else:
             raise GoogleCxNotFound()
 

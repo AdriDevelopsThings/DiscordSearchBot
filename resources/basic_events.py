@@ -8,7 +8,7 @@ from resources.core.permissions import is_allowed_to_use, has_admin_permissions
 from resources.core.configure import msg_prefix, change_prefix
 from resources import get_prefix
 from datetime import datetime
-from resources.core.submited_tasks import SubmitedTask, BanMessageTemplate, add_task, get_task_by_message
+from resources.core.submited_tasks import SubmitedTask, BanMessageTemplate, add_task, get_task_by_message, remove_task
 
 already_processed_request_id = []
 
@@ -64,6 +64,14 @@ async def on_reaction_add(reaction, user):
         if not task is None:
             await reaction.remove(user)
             await task.kill(BanMessageTemplate(user, reaction.message.guild, reaction.message.channel))
+    if reaction.emoji.encode() == b'\xf0\x9f\x97\x91\xef\xb8\x8f':
+        task = get_task_by_message(reaction.message)
+        if not task is None and task.author_id == user.id:
+            await reaction.message.delete()
+            remove_task(task)
+        else:
+            await reaction.remove(user)
+
     if not await is_allowed_to_use(user, reaction.message.guild):
         await reaction.message.add_reaction("❌")
         return

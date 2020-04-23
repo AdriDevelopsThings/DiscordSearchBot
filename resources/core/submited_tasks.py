@@ -21,7 +21,9 @@ class SubmitedTask:
 
     async def kill(self, ban_msg_template: BanMessageTemplate):
         await ban(ban_msg_template, client.get_user(self.author_id))
-        await self.message.edit(content=":x: Dieser Inhalt wurde entfernt :x:", embed=None)
+        await self.message.edit(
+            content=":x: Dieser Inhalt wurde entfernt :x:", embed=None
+        )
 
 
 tasks: List[SubmitedTask] = []
@@ -29,6 +31,10 @@ tasks: List[SubmitedTask] = []
 
 def add_task(task: SubmitedTask):
     tasks.append(task)
+
+
+def remove_task(task: SubmitedTask):
+    tasks.remove(task)
 
 
 def get_task_by_message(message):

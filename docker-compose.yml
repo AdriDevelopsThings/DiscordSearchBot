@@ -24,6 +24,7 @@ services:
       BOT_TOKEN: ""
       GOOGLE_CX_ALL: "009036592350705430035:6ldu8w4sb8x"
       GOOGLE_CX_STACKOVERFLOW: "009036592350705430035:zbtf2kvp09s"
+      GOOGLE_CX_WIKIPEDIA: "009036592350705430035:j11uwdiaio4"
       CONFIG_FILE: "./settings.json"
       DB_HOST: "database"
       DB_PORT: "3306"
