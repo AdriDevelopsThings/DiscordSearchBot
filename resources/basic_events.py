@@ -1,4 +1,4 @@
-from discord import Forbidden
+from discord import Forbidden, User
 
 from .database.server import get_server
 from resources.core.logger import get_logger
@@ -60,7 +60,7 @@ async def on_message(message):
 
 
 @client.event
-async def on_reaction_add(reaction, user):
+async def on_reaction_add(reaction, user: User):
     if user.id == client.user.id:
         return
     if str(reaction) == "❌" and await has_admin_permissions(reaction.message.guild, user):
@@ -68,7 +68,7 @@ async def on_reaction_add(reaction, user):
         if not task is None:
             await reaction.remove(user)
             await task.kill(BanMessageTemplate(user, reaction.message.guild, reaction.message.channel))
-    if reaction.emoji.encode() == b'\xf0\x9f\x97\x91\xef\xb8\x8f':
+    if not user.bot and reaction.emoji.encode() == b'\xf0\x9f\x97\x91\xef\xb8\x8f':
         task = get_task_by_message(reaction.message)
         if not task is None and task.author_id == user.id:
             if not task.orginal_message is None:
