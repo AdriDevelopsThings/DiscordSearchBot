@@ -43,6 +43,7 @@ def get_task_by_message(message):
         if task.message.id == message.id:
             return task
 
+
 def get_task_by_orginal_message(message):
     for task in tasks:
         if task.orginal_message.id == message.id:
