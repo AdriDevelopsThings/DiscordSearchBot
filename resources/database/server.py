@@ -23,15 +23,15 @@ class Server(db):
 
 def get_server(guild, s=None):
     server = None
+    session: Session = Session(expire_on_commit=False) if s is None else s
     try:
-        session: Session = Session(expire_on_commit=False) if s is None else s
         server = session.query(Server).filter(Server.guild_id == guild.id).one()
     except NoResultFound:
         server = initiliaze_server(guild, session)
     finally:
         if s is None:
             session.close()
-        return server
+    return server
 
 
 def initiliaze_server(guild, s=None):
