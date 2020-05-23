@@ -1,5 +1,9 @@
 from resources import get_config
-from resources.core.configure import msg_prefix, change_prefix as sys_change_prefix, update_google_reactions_wrapper
+from resources.core.configure import (
+    msg_prefix,
+    change_prefix as sys_change_prefix,
+    update_google_reactions_wrapper,
+)
 from resources.core.configure_roles import add_admin_role, remove_admin_role
 from resources.core.configure_permissions import ban, unban, global_ban, global_unban
 from resources.core.commands.info import info as info_command
@@ -63,7 +67,7 @@ async def info(ctx):
 
 
 @client.command()
-async def lmgtfy(ctx, q: str):
+async def lmgtfy(ctx, *q):
     await lmgtfy_api(ctx, q)
 
 
@@ -83,18 +87,40 @@ async def help(ctx):
     embed.set_footer(text=f"DiscordSearchBot {get_version_name(get_config())}")
 
     commands = [
-        {"name": f"{await get_prefix(None, ctx.message)}help", "value": "Hilfe anzeigen"},
-        {"name": f"{await get_prefix(None, ctx.message)}prefix", "value": "Prefix anzeigen"},
+        {
+            "name": f"{await get_prefix(None, ctx.message)}help",
+            "value": "Hilfe anzeigen",
+        },
+        {
+            "name": f"{await get_prefix(None, ctx.message)}prefix",
+            "value": "Prefix anzeigen",
+        },
     ]
     admin_commands = [
-        {"name": f"{await get_prefix(None, ctx.message)}deny @User", "value": "Nutzer für Google Anfragen sperren"},
-        {"name": f"{await get_prefix(None, ctx.message)}allow @User",
-         "value": "Nutzer für Google Anfragen entsperren"},
-        {"name": f"{await get_prefix(None, ctx.message)}add_role @Role", "value": "Eine Admin Rolle hinzufügen"},
-        {"name": f"{await get_prefix(None, ctx.message)}remove_role @Role", "value": "Eine Admin Rolle entfernen"},
-        {"name": f"{await get_prefix(None, ctx.message)}change_google_reaction :emoji:",
-         "value": "Das Google Reaction Emoji ändern"},
-        {"name": f"{await get_prefix(None, ctx.message)}change_prefix PREFIX", "value": "Prefix ändern"},
+        {
+            "name": f"{await get_prefix(None, ctx.message)}deny @User",
+            "value": "Nutzer für Google Anfragen sperren",
+        },
+        {
+            "name": f"{await get_prefix(None, ctx.message)}allow @User",
+            "value": "Nutzer für Google Anfragen entsperren",
+        },
+        {
+            "name": f"{await get_prefix(None, ctx.message)}add_role @Role",
+            "value": "Eine Admin Rolle hinzufügen",
+        },
+        {
+            "name": f"{await get_prefix(None, ctx.message)}remove_role @Role",
+            "value": "Eine Admin Rolle entfernen",
+        },
+        {
+            "name": f"{await get_prefix(None, ctx.message)}change_google_reaction :emoji:",
+            "value": "Das Google Reaction Emoji ändern",
+        },
+        {
+            "name": f"{await get_prefix(None, ctx.message)}change_prefix PREFIX",
+            "value": "Prefix ändern",
+        },
     ]
 
     for command in commands:
@@ -107,8 +133,14 @@ async def help(ctx):
 
     for cx_type in get_config().ctx_types:
         embed.add_field(
-            name=f"{await get_prefix(None, ctx.message)}{cx_type} <search_query>", value=f"Auf {cx_type} suchen",
-            inline=False
+            name=f"{await get_prefix(None, ctx.message)}{cx_type} <search_query>",
+            value=f"Auf {cx_type} suchen",
+            inline=False,
         )
+    # lmgtfy command
+    embed.add_field(
+        name=f"{await get_prefix(None, ctx.message)}lmgtfy <search_querx>",
+        value="lmgtfy link erstellen",
+    )
 
     await ctx.send(embed=embed)
