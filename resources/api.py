@@ -51,6 +51,8 @@ class Api:
             return get_config().GOOGLE_CX_STACKOVERFLOW
         elif name == "wikipedia":
             return get_config().GOOGLE_CX_WIKIPEDIA
+        elif name == "youtube":
+            return get_config().GOOGLE_CX_YOUTUBE
         else:
             raise GoogleCxNotFound()
 

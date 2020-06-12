@@ -20,7 +20,7 @@ class Config:
     db_user: str = ""
     db_password: str = ""
     db_name: str = ""
-    ctx_types = ["google", "stackoverflow", "wikipedia", "lmgtfy"]
+    ctx_types = ["google", "stackoverflow", "wikipedia", "lmgtfy", "youtube"]
     version = Version()
     environment = Environment()
     github_link = "https://github.com/AdriBloober/DiscordSearchBot"
@@ -50,6 +50,10 @@ class Config:
         self.GOOGLE_CX_WIKIPEDIA = environ.get("GOOGLE_CX_WIKIPEDIA")
         if not self.GOOGLE_CX_WIKIPEDIA:
             print("GOOGLE_CX_WIKIPEDIA not correctly provided! Exiting!")
+            exit(1)
+        self.GOOGLE_CX_YOUTUBE = environ.get("GOOGLE_CX_YOUTUBE")
+        if not self.GOOGLE_CX_YOUTUBE:
+            print("GOOGLE_CX_YOUTUBE not correctly provided! Exiting!")
             exit(1)
         self.LOG_GUILD = environ.get("LOG_GUILD")
         self.LOG_CHANNEL = environ.get("LOG_CHANNEL")
