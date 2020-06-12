@@ -70,19 +70,20 @@ async def on_reaction_add(reaction, user: User):
             await task.kill(BanMessageTemplate(user, reaction.message.guild, reaction.message.channel))
     if not user.bot and reaction.emoji.encode() == b'\xf0\x9f\x97\x91\xef\xb8\x8f' and reaction.count > 1:
         task = get_task_by_message(reaction.message)
-        if not task is None and task.author_id == user.id:
-            if not task.orginal_message is None:
-                try:
-                    await task.orginal_message.delete()
-                except Forbidden:
-                    await reaction.message.channel.send("Liebe Admins, ich habe ja schon wenig Rechte, nur bitte "
-                                                        "bitte bitte gebt mir Rechte, um Nachrichten zu löschen. "
-                                                        ":cry: Ich wäre euch sehr dankbar!")
-                finally:
-                    await reaction.message.delete()
-                    remove_task(task)
-        else:
-            await reaction.remove(user)
+        if task is not None:
+            if task.author_id == user.id:
+                if task.orginal_message is not None:
+                    try:
+                        await task.orginal_message.delete()
+                    except Forbidden:
+                        await reaction.message.channel.send("Liebe Admins, ich habe ja schon wenig Rechte, nur bitte "
+                                                            "bitte bitte gebt mir Rechte, um Nachrichten zu löschen. "
+                                                            ":cry: Ich wäre euch sehr dankbar!")
+                    finally:
+                        await reaction.message.delete()
+                        remove_task(task)
+            else:
+                await reaction.remove(user)
 
     if not await is_allowed_to_use(user, reaction.message.guild):
         await reaction.message.add_reaction("❌")
@@ -96,7 +97,10 @@ async def on_reaction_add(reaction, user: User):
         return
 
     google_reaction = get_server(reaction.message.guild).google_reaction
-    emoji = client.get_emoji(int(google_reaction))
+    if google_reaction is None:
+        emoji = None
+    else:
+        emoji = client.get_emoji(int(google_reaction))
     if type(reaction.emoji) == str:
         return
     if emoji and reaction.emoji.id == emoji.id:
