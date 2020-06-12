@@ -1,4 +1,6 @@
-from discord import Forbidden, User
+from time import sleep
+
+from discord import Forbidden, User, NotFound
 
 from .database.server import get_server
 from resources.core.logger import get_logger
@@ -21,8 +23,7 @@ async def google_message(message, name):
     if not await is_allowed_to_use(message.author, message.guild):
         await message.add_reaction("❌")
         return
-    response = api.search(message, search_type="command", cx_type=name, prefix=await get_prefix(None, message))
-    msg = await message.channel.send(embed=response)
+    msg = await api.search(message, message.channel, search_type="command", cx_type=name, prefix=await get_prefix(None, message))
     await msg.add_reaction(b'\xf0\x9f\x97\x91\xef\xb8\x8f'.decode())
     add_task(SubmitedTask(msg, message.author, "command", orginal_message=message))
 
@@ -70,19 +71,20 @@ async def on_reaction_add(reaction, user: User):
             await task.kill(BanMessageTemplate(user, reaction.message.guild, reaction.message.channel))
     if not user.bot and reaction.emoji.encode() == b'\xf0\x9f\x97\x91\xef\xb8\x8f' and reaction.count > 1:
         task = get_task_by_message(reaction.message)
-        if not task is None and task.author_id == user.id:
-            if not task.orginal_message is None:
-                try:
-                    await task.orginal_message.delete()
-                except Forbidden:
-                    await reaction.message.channel.send("Liebe Admins, ich habe ja schon wenig Rechte, nur bitte "
-                                                        "bitte bitte gebt mir Rechte, um Nachrichten zu löschen. "
-                                                        ":cry: Ich wäre euch sehr dankbar!")
-                finally:
-                    await reaction.message.delete()
-                    remove_task(task)
-        else:
-            await reaction.remove(user)
+        if task is not None:
+            if task.author_id == user.id:
+                if task.orginal_message is not None:
+                    try:
+                        await task.orginal_message.delete()
+                    except Forbidden:
+                        await reaction.message.channel.send("Liebe Admins, ich habe ja schon wenig Rechte, nur bitte "
+                                                            "bitte bitte gebt mir Rechte, um Nachrichten zu löschen. "
+                                                            ":cry: Ich wäre euch sehr dankbar!")
+                    finally:
+                        await reaction.message.delete()
+                        remove_task(task)
+            else:
+                await reaction.remove(user)
 
     if not await is_allowed_to_use(user, reaction.message.guild):
         await reaction.message.add_reaction("❌")
@@ -96,13 +98,15 @@ async def on_reaction_add(reaction, user: User):
         return
 
     google_reaction = get_server(reaction.message.guild).google_reaction
-    emoji = client.get_emoji(int(google_reaction))
+    if google_reaction is None or google_reaction == "":
+        emoji = None
+    else:
+        emoji = client.get_emoji(int(google_reaction))
     if type(reaction.emoji) == str:
         return
     if emoji and reaction.emoji.id == emoji.id:
-        response = api.search(reaction.message, search_type="reaction", reaction_user=user)
+        message = await api.search(reaction.message, reaction.message.channel,  search_type="reaction", reaction_user=user)
         already_processed_request_id.append(reaction.message.id)
-        message = await reaction.message.channel.send(embed=response)
         await message.add_reaction(b'\xf0\x9f\x97\x91\xef\xb8\x8f'.decode())
         add_task(SubmitedTask(message, user, "reaction"))
 
@@ -115,6 +119,10 @@ async def on_guild_join(guild):
 @client.event
 async def on_message_delete(message):
     task = get_task_by_orginal_message(message)
-    if not task is None:
-        await task.message.delete()
-        remove_task(task)
+    if task is not None:
+        try:
+            await task.message.delete()
+        except NotFound:
+            pass
+        finally:
+            remove_task(task)

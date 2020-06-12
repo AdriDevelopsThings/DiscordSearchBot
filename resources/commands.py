@@ -13,7 +13,6 @@ from discord import Embed, Role, Member, Emoji, User
 
 from resources.core.permissions import has_admin_permissions
 from . import client, get_prefix
-from .core.commands.lmgtfy import lmgtfy_api
 
 
 @client.command()
@@ -64,11 +63,6 @@ async def remove_role(ctx, role: Role):
 @client.command()
 async def info(ctx):
     await info_command(ctx)
-
-
-@client.command()
-async def lmgtfy(ctx, *q):
-    await lmgtfy_api(ctx, q)
 
 
 @client.command()
@@ -137,10 +131,5 @@ async def help(ctx):
             value=f"Auf {cx_type} suchen",
             inline=False,
         )
-    # lmgtfy command
-    embed.add_field(
-        name=f"{await get_prefix(None, ctx.message)}lmgtfy <search_querx>",
-        value="lmgtfy link erstellen",
-    )
 
     await ctx.send(embed=embed)

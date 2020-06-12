@@ -35,7 +35,10 @@ def add_task(task: SubmitedTask):
 
 
 def remove_task(task: SubmitedTask):
-    tasks.remove(task)
+    try:
+        tasks.remove(task)
+    except ValueError:
+        pass
 
 
 def get_task_by_message(message):
