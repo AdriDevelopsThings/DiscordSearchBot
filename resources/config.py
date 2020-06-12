@@ -20,7 +20,7 @@ class Config:
     db_user: str = ""
     db_password: str = ""
     db_name: str = ""
-    ctx_types = ["google", "stackoverflow", "wikipedia"]
+    ctx_types = ["google", "stackoverflow", "wikipedia", "lmgtfy"]
     version = Version()
     environment = Environment()
     github_link = "https://github.com/AdriBloober/DiscordSearchBot"
